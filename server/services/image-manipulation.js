@@ -59,35 +59,21 @@ const resizeFileTo = async (
         font: 'Arial',
         dpi: 250,
       },
-    }).png().toBuffer();
-    //   .extend({
-    //   top: 20,
-    //   bottom: 20,
-    //   left: 20,
-    //   right: 20,
-    //   background: {r: 0, g: 0, b: 0, alpha: 0}
-    // });
-    //
-    // if (options.width || options.height) {
-    //   const resizeOptions = {
-    //     ...options,
-    //     ...(options.width ? options.width - 50 : {}),
-    //     ...(options.height ? options.height - 50 : {}),
-    //   }
-    //
-    //   console.log('resizeOptions')
-    //   console.log(resizeOptions)
-    //
-    //   watermarkImage.resize(resizeOptions)
-    // }
-    //
-    // watermarkImage
-    //   .png().toBuffer();
+    })
+      .extend({
+        top: 20,
+        bottom: 20,
+        left: 20,
+        right: 20,
+        background: {r: 0, g: 0, b: 0, alpha: 0}
+      })
+      .png().toBuffer();
 
     sharpInstance = sharpInstance.composite([{
       input: watermarkImage,
       gravity: watermark.position,
       tile: false,
+      blend: 'atop'
     }])
   }
 
