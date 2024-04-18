@@ -37,6 +37,7 @@ const resizeFileTo = async (
   quality,
   progressive,
   autoOrientation,
+  watermark,
   { name, hash, ext, format }
 ) => {
   const filePath = join(file.tmpWorkingDirectory, hash);
@@ -48,6 +49,31 @@ const resizeFileTo = async (
   }
 
   sharpInstance.resize(options);
+
+  if(watermark){
+    const color = RGBAToHexA(watermark.color)
+    const watermarkImage = await sharp({
+      text: {
+        text: `<span foreground="${color}">${watermark.text}</span>`,
+        rgba: true,
+        font: 'Arial',
+        dpi: 250,
+      },
+    }).extend({
+      top: 20,
+      bottom: 20,
+      left: 20,
+      right: 20,
+      background: { r: 0, g: 0, b: 0, alpha: 0 }
+    }).png().toBuffer();
+
+    sharpInstance = sharpInstance.composite([{
+      input: watermarkImage,
+      gravity: watermark.position,
+      tile: false,
+    }])
+  }
+
 
   switch (format) {
     case "jpg":
@@ -99,9 +125,16 @@ const generateResponsiveFormats = async (file) => {
   //   return [];
   // }
 
-  const { formats, quality, progressive } = await getService(
+  const { formats, quality, progressive, watermarkText, watermarkPosition, watermarkColor } = await getService(
     "responsive-image"
   ).getSettings();
+
+
+  const watermark = watermarkText ? {
+    text: watermarkText,
+    position: watermarkPosition,
+    color: watermarkColor || 'rgba(255,255,255,0.5)',
+  } : null
 
   const x2Formats = [];
   const x1Formats = formats.map((format) => {
@@ -117,6 +150,7 @@ const generateResponsiveFormats = async (file) => {
           quality,
           progressive,
           autoOrientation,
+          watermark
         })
       );
     }
@@ -126,6 +160,7 @@ const generateResponsiveFormats = async (file) => {
       quality,
       progressive,
       autoOrientation,
+      watermark
     });
   });
 
@@ -142,7 +177,7 @@ const getFileExtension = (file, { convertToFormat }) => {
 
 const generateBreakpoint = async (
   key,
-  { file, format, quality, progressive, autoOrientation }
+  { file, format, quality, progressive, autoOrientation, watermark },
 ) => {
   const newFile = await resizeFileTo(
     file,
@@ -150,6 +185,7 @@ const generateBreakpoint = async (
     quality,
     progressive,
     autoOrientation,
+    watermark,
     {
       name: `${key}_${file.name}`,
       hash: `${key}_${file.hash}`,
@@ -162,6 +198,17 @@ const generateBreakpoint = async (
     file: newFile,
   };
 };
+
+function RGBAToHexA(rgba, forceRemoveAlpha = false) {
+  return "#" + rgba.replace(/^rgba?\(|\s+|\)$/g, '') // Get's rgba / rgb string values
+    .split(',') // splits them at ","
+    .filter((string, index) => !forceRemoveAlpha || index !== 3)
+    .map(string => parseFloat(string)) // Converts them to numbers
+    .map((number, index) => index === 3 ? Math.round(number * 255) : number) // Converts alpha to 255 number
+    .map(number => number.toString(16)) // Converts numbers to hex
+    .map(string => string.length === 1 ? "0" + string : string) // Adds 0 when length of one number is 1
+    .join("") // Puts the array to togehter to a string
+}
 
 module.exports = () => ({
   ...imageManipulation(),

@@ -51,6 +51,9 @@ module.exports = async (
         ],
         quality: 87,
         progressive: true,
+        watermarkText: '',
+        watermarkPosition: '',
+        watermarkColor: '',
       },
     });
   }
