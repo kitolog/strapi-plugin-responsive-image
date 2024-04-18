@@ -13,6 +13,9 @@ function emptyStringToNull(value, originalValue) {
 const settingsSchema = yup.object({
   quality: yup.number().required().min(1).max(100),
   progressive: yup.boolean().required(),
+  watermarkText: yup.string().max(70),
+  watermarkPosition: yup.string(),
+  watermarkColor: yup.string(),
   formats: yup.array().of(yup.object().shape({
     name: yup.string().matches(/^[a-zA-Z0-9_-]+$/gi).required(),
     x2: yup.boolean(),

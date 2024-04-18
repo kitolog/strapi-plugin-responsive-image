@@ -9,11 +9,17 @@ const initialState = {
     formats: [],
     quality: 87,
     progressive: false,
+    watermarkText: '',
+    watermarkPosition: '',
+    watermarkColor: '',
   },
   modifiedData: {
     formats: [],
     quality: 87,
     progressive: false,
+    watermarkText: '',
+    watermarkPosition: '',
+    watermarkColor: '',
   },
 };
 

@@ -17,6 +17,8 @@ import { Button } from "@strapi/design-system/Button";
 import { Main } from "@strapi/design-system/Main";
 import { Stack } from "@strapi/design-system/Stack";
 import { NumberInput } from "@strapi/design-system/NumberInput";
+import { TextInput } from "@strapi/design-system/TextInput";
+import { Select, Option } from "@strapi/design-system";
 import { Link } from "@strapi/design-system/Link";
 import { Grid, GridItem } from "@strapi/design-system/Grid";
 import { BaseHeaderLayout } from "@strapi/design-system";
@@ -47,6 +49,19 @@ export const SettingsPage = () => {
   ] = useReducer(reducer, initialState, init);
 
   const isMounted = useRef(true);
+
+  const positionList = [
+    "centre",
+    "center",
+    "north",
+    "northeast",
+    "east",
+    "southeast",
+    "south",
+    "southwest",
+    "west",
+    "northwest",
+  ];
 
   useEffect(() => {
     const CancelToken = axios.CancelToken;
@@ -288,6 +303,65 @@ export const SettingsPage = () => {
                               },
                             });
                           }}
+                        />
+                      </GridItem>
+                      <GridItem col={6} s={12}>
+                        <TextInput
+                          label={formatMessage({
+                            id: getTrad("settings.form.watermark.label"),
+                          })}
+                          name="watermarkText"
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: "watermarkText",
+                              value: e.target.value,
+                            },
+                          })}
+                          value={modifiedData.watermarkText}
+                        />
+                      </GridItem>
+                      <GridItem col={3} s={12}>
+                        <Select
+                          label={formatMessage({
+                            id: getTrad("settings.form.watermark.position.label"),
+                          })}
+                          name="position"
+                          value={modifiedData.watermarkPosition}
+                          selectButtonTitle="Carret Down Button"
+                          onChange={(value) =>
+                            handleChange(
+                              {
+                                target: {
+                                  name: "watermarkPosition",
+                                  value,
+                                },
+                              },
+                            )
+                          }
+                        >
+                          {positionList.map((position) => (
+                            <Option key={position} value={position}>
+                              {position}
+                            </Option>
+                          ))}
+                        </Select>
+                      </GridItem>
+                      <GridItem col={3} s={12}>
+                        <TextInput
+                          label={formatMessage({
+                            id: getTrad("settings.form.watermarkColor.label"),
+                          })}
+                          hint={formatMessage({
+                            id: getTrad("settings.form.watermarkColor.description"),
+                          })}
+                          name="watermarkColor"
+                          onChange={(e) => handleChange({
+                            target: {
+                              name: "watermarkColor",
+                              value: e.target.value,
+                            },
+                          })}
+                          value={modifiedData.watermarkColor}
                         />
                       </GridItem>
                     </Grid>
