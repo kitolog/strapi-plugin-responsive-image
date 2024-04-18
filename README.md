@@ -17,14 +17,14 @@ Custom responsive image formats for https://strapi.io v4 (For strapi v3 use v0.5
 Using npm
 
 ```bash
-npm install --save strapi-plugin-responsive-image
+npm install --save strapi-plugin-watermark-responsive-image
 npm run build
 ```
 
 Using yarn
 
 ```bash
-yarn add strapi-plugin-responsive-image
+yarn add strapi-plugin-watermark-responsive-image
 yarn build
 ```
 
@@ -45,7 +45,7 @@ Paste the code below in the file.
 
 
 ```javascript
-const imageManipulation = require("strapi-plugin-responsive-image/server/services/image-manipulation");
+const imageManipulation = require("strapi-plugin-watermark-responsive-image/server/services/image-manipulation");
 
 module.exports = (plugin) => {
   plugin.services["image-manipulation"] = imageManipulation;
@@ -66,7 +66,7 @@ touch src/extensions/upload/strapi-server.ts
 Paste the code below in the file.
 
 ```typescript
-const imageManipulation = require("strapi-plugin-responsive-image/server/services/image-manipulation");
+const imageManipulation = require("strapi-plugin-watermark-responsive-image/server/services/image-manipulation");
 
 export default (plugin) => {
   plugin.services["image-manipulation"] = imageManipulation();
