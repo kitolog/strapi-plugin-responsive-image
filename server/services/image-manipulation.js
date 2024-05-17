@@ -3,14 +3,14 @@
  * Image manipulation functions
  */
 const fs = require("fs");
-const { join } = require("path");
+const {join} = require("path");
 const sharp = require("sharp");
 const mime = require("mime-types");
 
 const {
-  file: { bytesToKbytes },
+  file: {bytesToKbytes},
 } = require("@strapi/utils");
-const { getService } = require("../utils");
+const {getService} = require("../utils");
 const pluginUpload = require("@strapi/plugin-upload/strapi-server");
 const imageManipulation = pluginUpload().services["image-manipulation"];
 
@@ -38,7 +38,7 @@ const resizeFileTo = async (
   progressive,
   autoOrientation,
   watermark,
-  { name, hash, ext, format }
+  {name, hash, ext, format}
 ) => {
   const filePath = join(file.tmpWorkingDirectory, hash);
 
@@ -50,7 +50,7 @@ const resizeFileTo = async (
 
   sharpInstance.resize(options);
 
-  if(watermark){
+  if (watermark) {
     const color = RGBAToHexA(watermark.color)
     const watermarkImage = await sharp({
       text: {
@@ -80,7 +80,7 @@ const resizeFileTo = async (
 
   switch (format) {
     case "jpg":
-      sharpInstance.jpeg({ quality, progressive, force: false });
+      sharpInstance.jpeg({quality, progressive, force: false});
       break;
     case "png":
       sharpInstance.png({
@@ -90,10 +90,10 @@ const resizeFileTo = async (
       });
       break;
     case "webp":
-      sharpInstance.webp({ quality, force: false });
+      sharpInstance.webp({quality, force: false});
       break;
     case "avif":
-      sharpInstance.avif({ quality });
+      sharpInstance.avif({quality});
       break;
 
     default:
@@ -110,14 +110,14 @@ const resizeFileTo = async (
     getStream: () => fs.createReadStream(filePath),
   };
 
-  const { width, height, size } = await getMetadata(newFile);
+  const {width, height, size} = await getMetadata(newFile);
 
-  Object.assign(newFile, { width, height, size: bytesToKbytes(size) });
+  Object.assign(newFile, {width, height, size: bytesToKbytes(size)});
   return newFile;
 };
 
 const generateResponsiveFormats = async (file) => {
-  const { responsiveDimensions = false, autoOrientation = false } = await strapi
+  const {responsiveDimensions = false, autoOrientation = false} = await strapi
     .plugin("upload")
     .service("upload")
     .getSettings();
@@ -128,7 +128,7 @@ const generateResponsiveFormats = async (file) => {
   //   return [];
   // }
 
-  const { formats, quality, progressive, watermarkText, watermarkPosition, watermarkColor } = await getService(
+  const {formats, quality, progressive, watermarkText, watermarkPosition, watermarkColor} = await getService(
     "responsive-image"
   ).getSettings();
 
@@ -170,7 +170,7 @@ const generateResponsiveFormats = async (file) => {
   return Promise.all([...x1Formats, ...x2Formats]);
 };
 
-const getFileExtension = (file, { convertToFormat }) => {
+const getFileExtension = (file, {convertToFormat}) => {
   if (!convertToFormat) {
     return file.ext;
   }
@@ -180,15 +180,16 @@ const getFileExtension = (file, { convertToFormat }) => {
 
 const generateBreakpoint = async (
   key,
-  { file, format, quality, progressive, autoOrientation, watermark },
+  {file, format, quality, progressive, autoOrientation, watermark},
 ) => {
+  const skipWatermark = key?.indexOf('no-watermark') > -1 || key?.indexOf('NoWatermark') > -1 || key?.indexOf('noWatermark') > -1;
   const newFile = await resizeFileTo(
     file,
     format,
     quality,
     progressive,
     autoOrientation,
-    key?.indexOf('no-watermark') > -1 ? null : watermark,
+    skipWatermark ? null : watermark,
     {
       name: `${key}_${file.name}`,
       hash: `${key}_${file.hash}`,

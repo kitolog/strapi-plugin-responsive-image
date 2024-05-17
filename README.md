@@ -89,7 +89,7 @@ The plugin uses [sharp](https://github.com/lovell/sharp) to resize the image.
 | Watermark position| Position on image                                       |
 | Watermark color (rgba)| Color with transparency, for example rgba(0, 0, 0, 0.5) |
 
-Important note: to skip the watermark for the particular format, name it with the prefix `no-watermark` (e.g. `no-watermark small`)
+Important note: to skip the watermark for the particular format, name it with the prefix `no-watermark` or `NoWatermark` or `noWatermark` (e.g. `no-watermark small`)
 
 ## Format options
 
