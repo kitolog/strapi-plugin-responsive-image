@@ -188,7 +188,7 @@ const generateBreakpoint = async (
     quality,
     progressive,
     autoOrientation,
-    watermark,
+    key?.indexOf('no-watermark') > -1 ? null : watermark,
     {
       name: `${key}_${file.name}`,
       hash: `${key}_${file.hash}`,

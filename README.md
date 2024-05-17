@@ -81,10 +81,15 @@ Now when you'll upload a file you'll have the formats of the settings page.
 
 The plugin uses [sharp](https://github.com/lovell/sharp) to resize the image.
 
-| Input       | Description                      |
-| ----------- | -------------------------------- |
-| Quality     | Quality, integer 1-100           |
-| Progressive | Use progressive (interlace) scan |
+| Input       | Description                                             |
+|-------------|---------------------------------------------------------|
+| Quality     | Quality, integer 1-100                                  |
+| Progressive | Use progressive (interlace) scan                        |
+| Watermark   | Watermark text                                          |
+| Watermark position| Position on image                                       |
+| Watermark color (rgba)| Color with transparency, for example rgba(0, 0, 0, 0.5) |
+
+Important note: to skip the watermark for the particular format, name it with the prefix `no-watermark` (e.g. `no-watermark small`)
 
 ## Format options
 
